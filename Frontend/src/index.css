@@ -1,0 +1,21 @@
+body {
+    margin: 0;
+    background-color: #f8f9fa;
+    font-family: Arial, sans-serif;
+}
+
+.nav-link {
+    border-radius: 5px;
+}
+
+.nav-link:hover {
+    background-color: #e9ecef;
+}
+
+.card {
+    border-radius: 8px;
+}
+
+.table {
+    vertical-align: middle;
+}
