@@ -169,3 +169,17 @@ http://localhost:5173
 - Cancelled bookings do not block new bookings.
 - Back-to-back meetings are allowed.
 
+<<<<<<< HEAD
+=======
+## 🔒 Environment Variables
+
+Sensitive configuration is stored in environment variables.
+
+**Never commit `.env` files or database credentials to GitHub.**
+
+## 👨‍💻 Developer
+
+**Abhishek Kukadiya**
+
+Meeting Room Booking System – Full Stack Development Assessment.
+>>>>>>> 110ad9499b2ee2914b7e5ab6859d0e0e6fa919c2
