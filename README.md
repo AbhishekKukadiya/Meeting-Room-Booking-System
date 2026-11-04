@@ -161,11 +161,4 @@ http://localhost:5173
 |---|---|---|
 | GET | `/api/dashboard` | Get dashboard statistics |
 
-## ✅ Booking Validation
-
-- Meeting end time must be after start time.
-- Attendee count cannot exceed room capacity.
-- A room cannot have overlapping active bookings.
-- Cancelled bookings do not block new bookings.
-- Back-to-back meetings are allowed.
 
