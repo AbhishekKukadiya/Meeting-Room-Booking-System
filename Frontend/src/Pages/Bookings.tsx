@@ -3,9 +3,19 @@ import axios from "../Utils/Axios";
 import type { Room, Booking } from "../Types";
 import { toast } from "react-toastify";
 
+function isBookingCompleted(booking: Booking, currentTime: number): boolean {
+  if (booking.status !== "active") {
+    return false;
+  }
+
+  const endTime = new Date(`${booking.bookingDate}T${booking.endTime}`);
+  return !Number.isNaN(endTime.getTime()) && endTime.getTime() <= currentTime;
+}
+
 function Bookings() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [currentTime, setCurrentTime] = useState(Date.now());
 
   const [loading, setLoading] = useState(true);
 
@@ -26,6 +36,9 @@ function Bookings() {
   useEffect(() => {
     getRooms();
     getBookings();
+
+    const timer = window.setInterval(() => setCurrentTime(Date.now()), 60_000);
+    return () => window.clearInterval(timer);
   }, []);
 
   // Get rooms for dropdown
@@ -448,56 +461,62 @@ function Bookings() {
                 </thead>
 
                 <tbody>
-                  {bookings.map((booking) => (
-                    <tr key={booking.id}>
-                      <td>{booking.id}</td>
+                  {bookings.map((booking) => {
+                    const completed = isBookingCompleted(booking, currentTime);
 
-                      <td>{booking.meetingTitle}</td>
+                    return (
+                      <tr key={booking.id}>
+                        <td>{booking.id}</td>
 
-                      <td>{booking.roomName}</td>
+                        <td>{booking.meetingTitle}</td>
 
-                      <td>{booking.organizerName}</td>
+                        <td>{booking.roomName}</td>
 
-                      <td>{booking.bookingDate}</td>
+                        <td>{booking.organizerName}</td>
 
-                      <td>
-                        {booking.startTime.slice(0, 5)} -
-                        {booking.endTime.slice(0, 5)}
-                      </td>
+                        <td>{booking.bookingDate}</td>
 
-                      <td>{booking.attendeeCount}</td>
+                        <td>
+                          {booking.startTime.slice(0, 5)} -
+                          {booking.endTime.slice(0, 5)}
+                        </td>
 
-                      <td>
-                        <span
-                          className={`badge ${
-                            booking.status === "active"
-                              ? "bg-success"
-                              : "bg-secondary"
-                          }`}
-                        >
-                          {booking.status}
-                        </span>
-                      </td>
+                        <td>{booking.attendeeCount}</td>
 
-                      <td>
-                        <button
-                          className="btn btn-warning btn-sm me-2 mb-1"
-                          disabled={booking.status === "cancelled"}
-                          onClick={() => handleEdit(booking)}
-                        >
-                          Edit
-                        </button>
+                        <td>
+                          <span
+                            className={`badge ${
+                              completed
+                                ? "bg-primary"
+                                : booking.status === "active"
+                                  ? "bg-success"
+                                  : "bg-secondary"
+                            }`}
+                          >
+                            {completed ? "Completed" : booking.status}
+                          </span>
+                        </td>
 
-                        <button
-                          className="btn btn-danger btn-sm mb-1"
-                          disabled={booking.status === "cancelled"}
-                          onClick={() => handleCancel(booking.id)}
-                        >
-                          Cancel
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                        <td>
+                          <button
+                            className="btn btn-warning btn-sm me-2 mb-1"
+                            disabled={booking.status === "cancelled"}
+                            onClick={() => handleEdit(booking)}
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            className="btn btn-danger btn-sm mb-1"
+                            disabled={booking.status === "cancelled"}
+                            onClick={() => handleCancel(booking.id)}
+                          >
+                            Cancel
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
