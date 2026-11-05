@@ -16,9 +16,7 @@ function Bookings() {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [currentTime, setCurrentTime] = useState(Date.now());
-
   const [loading, setLoading] = useState(true);
-
   const [roomId, setRoomId] = useState("");
   const [organizerName, setOrganizerName] = useState("");
   const [meetingTitle, setMeetingTitle] = useState("");
@@ -26,10 +24,7 @@ function Bookings() {
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   const [attendeeCount, setAttendeeCount] = useState("");
-
   const [editId, setEditId] = useState<number | null>(null);
-
-  // Filters
   const [filterRoom, setFilterRoom] = useState("");
   const [filterDate, setFilterDate] = useState("");
 
@@ -175,7 +170,6 @@ function Bookings() {
       toast.error("Cancelled booking cannot be edited");
       return;
     }
-
     setEditId(booking.id);
     setRoomId(String(booking.roomId));
     setOrganizerName(booking.organizerName);
@@ -184,46 +178,37 @@ function Bookings() {
     setStartTime(booking.startTime.slice(0, 5));
     setEndTime(booking.endTime.slice(0, 5));
     setAttendeeCount(String(booking.attendeeCount));
-
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
   };
-
   // Cancel booking
   const handleCancel = async (id: number) => {
     if (!window.confirm("Are you sure you want to cancel this booking?")) {
       return;
     }
-
     try {
       await axios.patch(`/bookings/${id}/cancel`);
-
       toast.success("Booking cancelled successfully");
-
       getBookings();
     } catch (error: any) {
       toast.error(error.response?.data?.message || "Unable to cancel booking");
     }
   };
-
   // Selected room bookings for selected date
   const getRoomBookings = async () => {
     if (!filterRoom || !filterDate) {
       toast.error("Please select room and date");
       return;
     }
-
     setLoading(true);
-
     try {
       const response = await axios.get(`/rooms/${filterRoom}/bookings`, {
         params: {
           date: filterDate,
         },
       });
-
       setBookings(
         response.data.data.map((booking: any) => ({
           ...booking,
@@ -247,19 +232,16 @@ function Bookings() {
   return (
     <div>
       <h3 className="mb-4">Manage Bookings</h3>
-
       {/* Booking Form */}
       <div className="card shadow-sm mb-4">
         <div className="card-body">
           <h5 className="mb-3">
             {editId ? "Edit Booking" : "Create New Booking"}
           </h5>
-
           <form onSubmit={handleSubmit}>
             <div className="row g-3">
               <div className="col-md-4">
                 <label className="form-label">Select Room</label>
-
                 <select
                   className="form-select"
                   value={roomId}
@@ -267,7 +249,6 @@ function Bookings() {
                   required
                 >
                   <option value="">Select Room</option>
-
                   {rooms.map((room) => (
                     <option key={room.id} value={room.id}>
                       {room.name} - Capacity: {room.capacity}
@@ -275,10 +256,8 @@ function Bookings() {
                   ))}
                 </select>
               </div>
-
               <div className="col-md-4">
                 <label className="form-label">Organizer Name</label>
-
                 <input
                   type="text"
                   className="form-control"
@@ -288,10 +267,8 @@ function Bookings() {
                   required
                 />
               </div>
-
               <div className="col-md-4">
                 <label className="form-label">Meeting Title</label>
-
                 <input
                   type="text"
                   className="form-control"
@@ -301,10 +278,8 @@ function Bookings() {
                   required
                 />
               </div>
-
               <div className="col-md-4">
                 <label className="form-label">Booking Date</label>
-
                 <input
                   type="date"
                   className="form-control"
@@ -314,10 +289,8 @@ function Bookings() {
                   required
                 />
               </div>
-
               <div className="col-md-4">
                 <label className="form-label">Start Time</label>
-
                 <input
                   type="time"
                   className="form-control"
@@ -326,10 +299,8 @@ function Bookings() {
                   required
                 />
               </div>
-
               <div className="col-md-4">
                 <label className="form-label">End Time</label>
-
                 <input
                   type="time"
                   className="form-control"
@@ -338,10 +309,8 @@ function Bookings() {
                   required
                 />
               </div>
-
               <div className="col-md-4">
                 <label className="form-label">Attendee Count</label>
-
                 <input
                   type="number"
                   className="form-control"
@@ -352,12 +321,10 @@ function Bookings() {
                 />
               </div>
             </div>
-
             <div className="mt-3">
               <button className="btn btn-primary me-2" type="submit">
                 {editId ? "Update Booking" : "Create Booking"}
               </button>
-
               {editId && (
                 <button
                   type="button"
@@ -371,23 +338,19 @@ function Bookings() {
           </form>
         </div>
       </div>
-
       {/* Filters */}
       <div className="card shadow-sm mb-4">
         <div className="card-body">
           <h5 className="mb-3">Filter Bookings</h5>
-
           <div className="row g-3">
             <div className="col-md-4">
               <label className="form-label">Select Room</label>
-
               <select
                 className="form-select"
                 value={filterRoom}
                 onChange={(e) => setFilterRoom(e.target.value)}
               >
                 <option value="">All Rooms</option>
-
                 {rooms.map((room) => (
                   <option key={room.id} value={room.id}>
                     {room.name}
@@ -395,10 +358,8 @@ function Bookings() {
                 ))}
               </select>
             </div>
-
             <div className="col-md-4">
               <label className="form-label">Select Date</label>
-
               <input
                 type="date"
                 className="form-control"
@@ -406,19 +367,16 @@ function Bookings() {
                 onChange={(e) => setFilterDate(e.target.value)}
               />
             </div>
-
             <div className="col-md-4 d-flex align-items-end gap-2">
               <button className="btn btn-primary" onClick={handleFilter}>
                 Search
               </button>
-
               <button
                 className="btn btn-info text-white"
                 onClick={getRoomBookings}
               >
                 Room Schedule
               </button>
-
               <button
                 className="btn btn-secondary"
                 onClick={() => {
@@ -433,12 +391,10 @@ function Bookings() {
           </div>
         </div>
       </div>
-
       {/* Booking Table */}
       <div className="card shadow-sm">
         <div className="card-body">
           <h5 className="mb-3">Booking List</h5>
-
           {loading ? (
             <p>Loading bookings...</p>
           ) : bookings.length === 0 ? (
@@ -459,30 +415,21 @@ function Bookings() {
                     <th>Actions</th>
                   </tr>
                 </thead>
-
                 <tbody>
                   {bookings.map((booking) => {
                     const completed = isBookingCompleted(booking, currentTime);
-
                     return (
                       <tr key={booking.id}>
                         <td>{booking.id}</td>
-
                         <td>{booking.meetingTitle}</td>
-
                         <td>{booking.roomName}</td>
-
                         <td>{booking.organizerName}</td>
-
                         <td>{booking.bookingDate}</td>
-
                         <td>
                           {booking.startTime.slice(0, 5)} -
                           {booking.endTime.slice(0, 5)}
                         </td>
-
                         <td>{booking.attendeeCount}</td>
-
                         <td>
                           <span
                             className={`badge ${
@@ -496,19 +443,17 @@ function Bookings() {
                             {completed ? "Completed" : booking.status}
                           </span>
                         </td>
-
                         <td>
                           <button
                             className="btn btn-warning btn-sm me-2 mb-1"
-                            disabled={booking.status === "cancelled"}
+                            disabled={booking.status === "cancelled" || completed}
                             onClick={() => handleEdit(booking)}
                           >
                             Edit
                           </button>
-
                           <button
                             className="btn btn-danger btn-sm mb-1"
-                            disabled={booking.status === "cancelled"}
+                            disabled={booking.status === "cancelled" || completed}
                             onClick={() => handleCancel(booking.id)}
                           >
                             Cancel
