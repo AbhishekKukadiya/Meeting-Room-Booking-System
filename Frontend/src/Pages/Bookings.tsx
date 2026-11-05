@@ -446,14 +446,14 @@ function Bookings() {
                         <td>
                           <button
                             className="btn btn-warning btn-sm me-2 mb-1"
-                            disabled={booking.status === "cancelled" || completed}
+                            disabled={booking.status === "cancelled"}
                             onClick={() => handleEdit(booking)}
                           >
                             Edit
                           </button>
                           <button
                             className="btn btn-danger btn-sm mb-1"
-                            disabled={booking.status === "cancelled" || completed}
+                            disabled={booking.status === "cancelled"}
                             onClick={() => handleCancel(booking.id)}
                           >
                             Cancel
